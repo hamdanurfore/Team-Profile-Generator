@@ -6,6 +6,7 @@ const inquirer = require("inquirer");
 const path = require("path");
 const fs = require("fs");
 
+// Template location
 const OUTPUT_DIR = path.resolve(__dirname, "output");
 const outputPath = path.join(OUTPUT_DIR, "team.html");
 
@@ -26,7 +27,9 @@ function saveHTMLToFile(html) {
 
 // Teamm members array 
 const teamMembers = [];
-let lastManagerPromptAnswered = false;
+
+
+let lastPromptAnswered = false;
 
 // Manager prompts
 function promptManager() {
@@ -83,48 +86,43 @@ function promptManager() {
 
             teamMembers.push(manager);
             console.log(manager)
-            lastManagerPromptAnswered = true;
+            lastPromptAnswered = true;
 
-            // Check if the flag is true before calling the menu
-            if (lastManagerPromptAnswered) {
+            if (lastPromptAnswered) {
                 menu();
             }
         });
-        };
-        
+};
 
-
-
+// menu function
 function menu() {
-    inquirer.prompt({
-        type: 'list',
-        name: 'choice',
-        message: "Choose your next team member",
-        choices: [
-            "Intern",
-            "Engineer",
-            "Done", 
-
-        ]
-    })
-
-    .then((choicesInput) => {
-        if (choicesInput.choice === "Engineer") {
-            promptEngineer();
-        } else if (choicesInput.choice === "Intern") {
-            promptIntern();
-        } else if (choicesInput.choice === "Exit") {
-            console.log("Your team is now complete!");
-        } else {
-            
-            console.log("Invalid choice. Please try again.");
-            menu();
-        }
-    });
-
+    inquirer
+        .prompt({
+            type: 'list',
+            name: 'choice',
+            message: "Choose your next team member",
+            choices: ["Intern", "Engineer", "Done"],
+        })
+        .then((choicesInput) => {
+            if (choicesInput.choice === "Engineer") {
+                promptEngineer();
+            } else if (choicesInput.choice === "Intern") {
+                promptIntern();
+            } else if (choicesInput.choice === "Done") {
+                handleDone();
+            } else {
+                console.log("Invalid choice. Please try again.");
+                menu();
+            }
+        });
 }
 
-promptManager();
+// Signalling when user is done
+function handleDone() {
+    const html = renderHTML(teamMembers);
+    saveHTMLToFile(html);
+    console.log("Team data saved. HTML file will be created.");
+}
 
 // Engineer prompts
 function promptEngineer() {
@@ -173,6 +171,12 @@ function promptEngineer() {
 
             teamMembers.push(engineer);
             console.log(engineer);
+
+            lastPromptAnswered = true;
+
+            if (lastPromptAnswered) {
+                menu();
+            }
 
         });
 }
@@ -225,5 +229,13 @@ function promptIntern() {
             teamMembers.push(intern);
             console.log(intern);
 
+            lastPromptAnswered = true;
+
+            if (lastPromptAnswered) {
+                menu();
+            }
+
         });
 }
+
+promptManager();

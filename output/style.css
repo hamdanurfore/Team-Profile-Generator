@@ -1,0 +1,27 @@
+
+.team-heading {
+    background-color: blueviolet;
+    color: white;
+}
+
+
+.card-title {
+    color: white;
+}
+
+.card-body {
+background-color: rgb(238, 238, 223);
+}
+.employee-card {
+    background-color: rgb(46, 116, 197);
+    color: black;
+    display: flex;
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+    margin-left: 2rem;
+}
+
+.team-area {
+    flex-wrap: wrap;
+}
+
