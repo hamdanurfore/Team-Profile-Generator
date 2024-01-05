@@ -21,7 +21,7 @@ const { choices } = require("yargs");
 
 // Teamm members array 
 const teamMembers = [];
-let lastManagerPromtAnswered = false;
+let lastManagerPromptAnswered = false;
 
 // Manager prompts
 function promptManager() {
@@ -98,12 +98,78 @@ function menu() {
         choices: [
             "Intern",
             "Engineer",
+            "Exit", 
+
         ]
     })
+
+    .then((choicesInput) => {
+        if (choicesInput.choice === "Engineer") {
+            promptEngineer();
+        } else if (choicesInput.choice === "Intern") {
+            
+        } else if (choicesInput.choice === "Exit") {
+            console.log("Exiting program. Goodbye!");
+        } else {
+            
+            console.log("Invalid choice. Please try again.");
+            menu();
+        }
+    });
 
 }
 
 promptManager();
 
-// menu();
+// Engineer prompts
+function promptEngineer() {
+    return inquirer.prompt([
+        {
+            type: 'input',
+            name: 'name',
+            message: "Enter the engineer's name:",
+        },
+        {
+            type: 'input',
+            name: 'id',
+            message: "Enter the engineer's id:",
+            validate: nameInput => {
+                if (isNaN(nameInput)) {
+                    console.log("Please enter the engineer's ID!")
+                    return false;
+                } else {
+                    return true;
+                }
+            }
+        },
+        {
+            type: 'input',
+            name: 'email',
+            message: "Enter the engineer's email:",
+            validate: email => {
+                valid = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email)
+                if (valid) {
+                    return true;
+                } else {
+                    console.log('Please enter an email!')
+                    return false;
+                }
+            }
+        },
+        {
+            type: 'input',
+            name: 'github',
+            message: "Enter the GitHub username:",
+        },
+    ])
+        .then((engineerInput) => {
+            const { name, id, email, github } = engineerInput;
+            const engineer = new Engineer(name, id, email, github);
+
+            teamMembers.push(engineer);
+            console.log(engineer);
+
+        });
+}
+
 
