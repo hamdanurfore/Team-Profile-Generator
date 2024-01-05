@@ -11,16 +11,17 @@ const outputPath = path.join(OUTPUT_DIR, "team.html");
 
 const render = require("./src/page-template.js");
 const { choices } = require("yargs");
-const template = render(teamMembers);
-fs.writeFile("index.html", template, (err) => {
-if (err) {
-    throw err
-}
-console.log( "file has been succesfully created");
-}) 
+// const template = render(teamMembers);
+// fs.writeFile("index.html", template, (err) => {
+// if (err) {
+//     throw err
+// }
+// console.log( "file has been succesfully created");
+// }) 
 
 // Teamm members array 
 const teamMembers = [];
+let lastManagerPromtAnswered = false;
 
 // Manager prompts
 function promptManager() {
@@ -76,11 +77,18 @@ function promptManager() {
             const manager = new Manager(name, id, email, officeNumber);
 
             teamMembers.push(manager);
-            console.log(manager);
+            console.log(manager)
+            lastManagerPromptAnswered = true;
 
+            // Check if the flag is true before calling the menu
+            if (lastManagerPromptAnswered) {
+                menu();
+            }
         });
-}
-promptManager();
+        };
+        
+
+
 
 function menu() {
     inquirer.prompt({
@@ -92,10 +100,10 @@ function menu() {
             "Engineer",
         ]
     })
-        .then((choicesInput) => {
-            console.log(choicesInput);
-        })
+
 }
 
-menu();
+promptManager();
+
+// menu();
 
